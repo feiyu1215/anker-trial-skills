@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安克试炼 · 答题执行手册（交互回合 + Prompt 全集 + 范例）</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --line:#e3e6ea; --text:#1f2933;
+    --muted:#5b6873; --accent:#185fa5; --accent-bg:#e6f1fb;
+    --ok:#0f6e56; --ok-bg:#e1f5ee; --no:#8a2020; --no-bg:#fcebeb;
+    --warn:#8a4b08; --warn-bg:#faeeda;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Microsoft YaHei","PingFang SC",-apple-system,Segoe UI,sans-serif;
+    font-size:14px;line-height:1.75;}
+  .wrap{max-width:1040px;margin:0 auto;padding:32px 20px 64px;}
+  h1{font-size:23px;margin:0 0 6px;font-weight:600;}
+  .sub{color:var(--muted);margin:0 0 20px;font-size:13px;}
+  .phase{font-size:18px;font-weight:600;margin:32px 0 2px;padding-top:6px;}
+  .phase-note{color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:16px 20px;margin:12px 0;scroll-margin-top:16px;}
+  .m-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:6px;}
+  .tag{font-size:12px;font-weight:600;color:#fff;border-radius:6px;padding:2px 8px;}
+  .tag.i{background:#185fa5}.tag.s{background:#0f6e56}.tag.o{background:#854f0b}.tag.g{background:#6b7280}
+  .m-title{font-size:15.5px;font-weight:600;}
+  .role{margin:0 0 10px;color:var(--muted);font-size:13px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:780px){.two{grid-template-columns:1fr}}
+  .box{border-radius:8px;padding:10px 13px;font-size:13px;}
+  .box.must{background:var(--ok-bg);color:#0b4f3f;}
+  .box.miss{background:var(--no-bg);color:var(--no);}
+  .box b{display:block;font-size:12px;margin-bottom:5px;letter-spacing:.3px;}
+  .box ul{margin:0;padding-left:17px;}
+  .box li{margin:3px 0;}
+  .say{position:relative;background:#f8f9fb;border:1px solid var(--line);
+    border-radius:8px;padding:12px 14px;margin:10px 0;}
+  .say .no-tag{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;display:block;}
+  .say pre{margin:0;white-space:pre-wrap;word-break:break-word;
+    font-family:Consolas,"Microsoft YaHei",monospace;font-size:12.5px;
+    line-height:1.75;color:#243b53;}
+  .copy-btn{position:absolute;top:8px;right:8px;font-size:11px;background:var(--card);
+    border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer;color:var(--muted);}
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .hi{background:var(--accent-bg);border-radius:10px;padding:12px 16px;font-size:13.5px;margin:12px 0;}
+  .tip{background:var(--warn-bg);color:var(--warn);border-radius:10px;
+    padding:12px 16px;font-size:13.5px;margin:12px 0;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;}
+  .toc h3{margin:0 0 10px;font-size:15px;font-weight:600;}
+  .toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;}
+  @media(max-width:680px){.toc-grid{grid-template-columns:1fr}}
+  .toc a{color:var(--accent);text-decoration:none;font-size:13.5px;padding:3px 0;
+    border-bottom:1px dashed transparent;}
+  .toc a:hover{border-bottom-color:var(--accent);}
+  table{border-collapse:collapse;width:100%;font-size:13px;}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#eef1f5;font-weight:600;}
+  tr:nth-child(even) td{background:#fafbfc;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>安克试炼 · 答题执行手册</h1>
+<p class="sub">交互回合表 ｜ Prompt 全集（可直接复制）｜ 范例与对照 ｜ 各段要点与易错</p>
+
+<div class="hi">
+<b>答题的本质就一句话：每一轮你的输入都应该是「判断 + 指令 + 约束」，而不是「一个问题」。</b>
+循环是：<b>你下判断 → AI 出草稿 → 你审并修正</b>。谁先给判断，谁就是思考的主角——这句话决定了评委在录屏里看到的是你还是 AI。
+</div>
+
+<div class="toc">
+  <h3>目录（点击跳转）</h3>
+  <div class="toc-grid">
+    <a href="#read">0 · 开局：读题四问 + 先验 AI</a>
+    <a href="#a">A · 答案本身长什么样（ISR 三段）</a>
+    <a href="#b">B · 完整交互回合表（14 轮）</a>
+    <a href="#c">C · Prompt 全集（可复制）</a>
+    <a href="#d">D · 范例与对照（话术 / 改写 / 结构）</a>
+    <a href="#e">E · 各段要点与易错</a>
+  </div>
+</div>
+
+<!-- ================= A ================= -->
+<h2 class="phase" id="read">0 · 开局：读题四问 + 先验 AI</h2>
+<p class="phase-note">看材料之前的两个动作。材料原话："先了解<b>关键术语是什么 → 业务流程是什么 → 问题到底出在哪里 → 最后到底要解决什么</b>。"</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">读题</span><span class="m-title">四条自问（按这个顺序，别跳）</span></div>
+  <table>
+    <tr><th style="width:28%">先问</th><th>要落到什么程度</th></tr>
+    <tr><td><b>关键术语是什么</b></td><td>题干里每个专有名词，你能不能用一句自己的话解释？解释不了的标出来——那正是要先让 AI 给你补的课，也是你后面判断它对错的抓手</td></tr>
+    <tr><td><b>业务流程是什么</b></td><td>钱 / 物 / 信息从谁流向谁、经过哪几步？画不出来就说明你还没懂这题的业务，此时问 AI 等于被它牵着走</td></tr>
+    <tr><td><b>问题到底是出在哪</b></td><td>先自己给一个位置判断（哪一环、哪类对象），再去和 AI 的比——有你的一版才有"差异"可看</td></tr>
+    <tr><td><b>最后到底要解决什么</b></td><td>落到"支持谁做什么决策"。这决定了交付物的骨架，也决定了哪些材料是干扰项</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">验伪</span><span class="m-title">秒回要警惕：先确认 AI 在你要的状态里</span></div>
+  <div class="box miss"><b>材料里的真实翻车现场</b><ul>
+    <li>有人发完消息 AI <b>秒回答案</b>，他觉得不对劲，问了一句"<b>你是谁？</b>"——才发现根本没进设定的角色和上下文</li>
+    <li>教训：<b>太快、太顺、太通用的回答，先怀疑它没吃到你的材料和约束</b>。材料原话："很考验提示词功底，最好检查一下模型输出的答案是否合理，避免被带偏"</li>
+  </ul></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">开局验伪</span><pre>在开始之前，先确认你的状态，逐条回答：
+1）你现在扮演的角色是什么？
+2）你已经读取了哪些材料、路径分别是什么？逐份列出你读到的核心事实（<b>用你的话概括，不要复述原文</b>）；
+3）我给你的约束里，你记住了哪几条？
+
+如果你其实没读到材料，直接说"没读到"，<b>不要凭常识作答</b>。</pre></div>
+</div>
+
+<h2 class="phase" id="a">A · 答案本身长什么样（ISR 三段）</h2>
+<p class="phase-note">官方方法论是 <b>Insight（洞察）→ Strategy（策略）→ Operation（执行）</b>。你的交付物就按这三段组织，内容用 M1–M10 体检表逐格填。</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:100px">段</th><th style="width:150px">官方要什么</th><th style="width:190px">必产出（缺一不可）</th><th>最易漏</th></tr>
+    <tr>
+      <td><span class="tag i">Insight</span></td>
+      <td>对原始材料做数据/文本分析，输出<b>洞察结论</b></td>
+      <td>问题判断 · 证据链 · 用户与场景分层 · 漏斗诊断 · <b>根因链</b></td>
+      <td>只做数据罗列不结论；根因写成现象（"活跃度低"是现象不是根因）；反馈不挂漏斗环节</td>
+    </tr>
+    <tr>
+      <td><span class="tag s">Strategy</span></td>
+      <td>据洞察梳理策略：目标画像、核心动作、风险点</td>
+      <td>候选方案（≥2，含不采纳理由）· 优先级与取舍 · <b>可执行动作六要素</b></td>
+      <td>方案不映射回根因；只给一个方案；动作停在"适当提醒"这种空泛词</td>
+    </tr>
+    <tr>
+      <td><span class="tag o">Operation</span></td>
+      <td>把策略转化成<b>可交付结果</b></td>
+      <td>验证指标（核心/过程/<b>护栏</b>）· 上线与灰度节奏 · 风险控制 · 交付目录 / Demo</td>
+      <td><b>漏护栏指标</b>（最多人漏）；只有成功线没有失败线和回滚线；Demo 引 CDN 白屏</td>
+    </tr>
+  </table>
+  <div class="tip" style="margin-top:14px;">
+  <b>时间账（3h 主表）：</b>学习 20 分钟 + 提交 15 分钟是硬成本，剩 145 分钟解题。其中 <b>Insight 侧四个动作（交叉 / 补盲 / 填 Insight / 压测）合计约 58 分钟、占大头</b>——评委判断思考深度的地方，别省；Strategy、Operation 各约 20 分钟；其余给定向、框架、校验、整合和 Demo。
+  <b>不要一上来就写方案</b>——洞察没立住，后面全白搭。
+  </div>
+</div>
+
+<!-- ================= B ================= -->
+<h2 class="phase" id="b">B · 完整交互回合表（14 轮）</h2>
+<p class="phase-note">
+这是"我和 AI 到底要做哪些交互"的答案。<b>轮数是自然结果，不是目标</b>——该有的 14 步走到就有十几轮，
+<b>不要为了凑轮数硬聊，也不要为了省轮数跳步</b>。第 8 轮（质疑）是<b>触发式</b>的，命中条件才走，可能走 0 次也可能走 3 次。<br>
+时间按校招 3h 主表标（累计分钟）：<b>学习 20 分钟 + 提交 15 分钟是硬成本，别按 180 分钟满打满算</b>。2h 场景按《完整打法》③压缩表同比例压，Demo 用 10 分钟极简版。
+</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:42px">轮</th><th style="width:82px">时机</th><th style="width:120px">阶段</th><th>你做什么 / 拿到什么</th><th style="width:60px">Prompt</th></tr>
+    <tr><td>0</td><td>开考前</td><td>定全局约束</td><td>角色 + 路径 + 禁编造 + 输出规范，<b>一次定死，之后不再重复</b>／ 拿到：全局规则生效</td><td>P0</td></tr>
+    <tr><td>—</td><td><b>0–20</b></td><td>官方学习</td><td><b>官方教学别跳过——它是评分标准的预告</b>：评委在看什么，教学里都演了。读的时候同步跑「0 · 读题四问」，顺便验证环境（能否联网 / /run /export 在不在）</td><td>—</td></tr>
+    <tr><td>1</td><td>20–28</td><td>定向</td><td>让 AI 读全部材料 → 拆交付要求 → 排时间表；<b>同时说出你自己的理解让它挑错</b>／ 拿到：交付清单 + 时间表</td><td>P1</td></tr>
+    <tr><td>2</td><td>28–43</td><td>要框架</td><td>按 ISR 要骨架，<b>先不要方案</b>；你先说自己的拆法让它评价／ 拿到：框架骨架</td><td>P2</td></tr>
+    <tr><td>3</td><td>43–54</td><td>材料交叉</td><td>让 AI 找<b>矛盾 / 干扰项 / 缺失</b>，明确"不要只复述"／ 拿到：三张清单</td><td>P3</td></tr>
+    <tr><td>4</td><td>54–64</td><td>外部补盲</td><td>让它联网搜行业基准，并说清<b>哪里可比哪里不可比</b>／ 拿到：外部参照系</td><td>P4</td></tr>
+    <tr><td>5</td><td>64–91</td><td>填 Insight</td><td>逐块填：问题判断 → 证据链 → 分层 → 漏斗 → 根因；<b>每填完一块让它复述</b>／ 拿到：诊断结论</td><td>P5</td></tr>
+    <tr><td>6</td><td>91–101</td><td><b>压力测试</b></td><td><b>你给出关键根因判断，命令它反驳</b>；不接受"还有别的可能"这种空话／ 拿到：被压过的根因</td><td>P6</td></tr>
+    <tr><td>7</td><td>101–120</td><td>填 Strategy</td><td>发散 ≥2 个方向 → ROI 量级 → 优先级 → 动作六要素 → <b>写清"不做什么"</b>／ 拿到：方案与取舍</td><td>P7</td></tr>
+    <tr><td><b>8</b></td><td><b>触发时</b></td><td><b>质疑</b></td><td><b>命中触发条件才走</b>：指出具体错处 + 证据 + 你的版本 + 要求重答／ 拿到：修正结论</td><td>P8</td></tr>
+    <tr><td>9</td><td>120–138</td><td>填 Operation</td><td>三类指标 + 成功/失败/回滚三线 + 灰度节奏 + 回滚预案 + 风险清单／ 拿到：可验证方案</td><td>P9</td></tr>
+    <tr><td>10</td><td>138–149</td><td>换角色校验</td><td>让 AI 扮演最刁的角色（CFO／业务方／一线）审你；<b>再把所有模糊词挑出来改写成可验收</b>／ 拿到：量化验收标准</td><td>P10</td></tr>
+    <tr><td>11</td><td>149–157</td><td>整合交付物</td><td>让 AI 把前面各部分整合成完整文档，按题目格式存到指定路径／ 拿到：方案文档</td><td>P11</td></tr>
+    <tr><td>12</td><td>157–165</td><td>Demo</td><td><b>v1 在产出段就边做边出</b>，此处只做定稿 + 自检（<b>无网硬约束</b>）／ 拿到：可打开的网页</td><td>P12</td></tr>
+    <tr><td>13</td><td>165–180</td><td>自检提交</td><td>逐条自检 + 打包 + 提交（<b>可先交后补</b>）</td><td>P13</td></tr>
+  </table>
+  <div class="box miss" style="margin-top:14px;">
+    <b>关于"要聊多少轮"</b>
+    <ul>
+      <li>有人说"至少 30 轮"——那和"云桌面卡、上下文变长后 AI 变慢、总共才 3 小时"直接冲突，<b>不作为指标</b></li>
+      <li>真正该数的不是轮数，是<b>你留下了多少条"属于自己的判断 + 被修正过的错误"</b>。这些才是录屏里的证据</li>
+      <li>为凑轮数去质疑 = 纯浪费，评委一眼看穿</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= C ================= -->
+<h2 class="phase" id="c">C · Prompt 全集（可直接复制）</h2>
+<p class="phase-note">按轮次排列。方括号 <b>［…］</b> 是要你现场填的占位——<b>每道题的业务领域、指标、角色都不同，不要套死</b>。</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P0</span><span class="m-title">轮 0 · 全局约束（一次定死）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P0</span><pre>接下来所有工作都遵守以下规则，后续每轮默认生效，我不再重复：
+
+1）角色：你是<b>［按本题领域填：资深XX专家，XX年经验，擅长在复杂约束下做XX］</b>。
+2）路径：所有输入和输出文件都放在 <b>［文件夹绝对路径］</b>，每次生成告诉我完整保存路径。
+3）禁编造：所有数据、结论必须标注来源；<b>禁止编造业务数据</b>，没有的一律写"数据不足"并说明补什么。
+4）禁模糊：不准出现"适当""优化""显著提升""确保顺利"这类词，要给可量化或可判定的标准。
+5）不迎合：我的判断和你的不一致时，<b>先指出我错在哪并给证据</b>，不要迎合我。
+6）分块：每次只完成我指定的一块，做完先复述这块结论，我确认后再进入下一块。
+<b>分块必须互斥</b>（各块不重叠、合起来能覆盖这道题），你先用 MECE 自查一遍再开做。
+7）纠错：我指出某处出错时，<b>只改那一部分</b>，不要整份重来。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P1</span><span class="m-title">轮 1 · 定向：读材料 + 拆交付 + 排时间</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P1</span><pre>【输入】全部题目材料（<b>［路径/粘贴］</b>）；总时限 <b>［3小时/2小时］</b>；我的一句话理解：<b>［你自己的一句话理解］</b>。
+【任务】
+1）列出题目<b>最终要求交付什么</b>：共几项、分别什么格式、什么命名、有没有字数或结构要求；
+2）按总时限排一张时间分配表：每一步干什么、各几分钟、留多少时间提交；
+3）校验我上面的理解：直接指出<b>哪里偏了、漏了什么关键约束</b>，不要先夸我。
+【约束】先别做业务分析，本轮只做这三件事；一切以题目原文为准，不要脑补要求。
+【输出】交付清单 + 时间分配表 + 对我理解的纠错清单。
+【边界】本轮不分析问题、不搭框架。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P2</span><span class="m-title">轮 2 · 要框架（先骨架，不要方案）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P2</span><pre>【输入】轮 1 确认的交付要求；我的拆法初判：<b>［你认为该按什么主线拆、为什么］</b>。
+【任务】
+1）按 Insight → Strategy → Operation 三段给我这份交付物的框架骨架：分哪几个板块、每块放什么、大概占多少篇幅；
+2）先评价我的拆法有没有漏洞，再给我你的版本。
+【约束】用列表给我；各块互斥、合起来覆盖全部交付要求（MECE 自查后再给）；<b>现在不要生成具体方案</b>。
+【输出】框架骨架清单 + 对我拆法的指正。
+【边界】框架确认前不写任何正文内容。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P3</span><span class="m-title">轮 3 · 材料交叉（矛盾 / 干扰 / 缺失）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P3</span><pre>【输入】<b>［N］</b> 份材料（<b>［路径/粘贴］</b>）。
+【任务】交叉对比，分三张清单给我：
+1）<b>矛盾</b>：哪些信息之间对不上？可能谁错了、依据是什么；
+2）<b>干扰项</b>：哪些看起来重要、但对本题决策其实无用？为什么；
+3）<b>缺失</b>：缺了哪些关键信息？缺了它会影响哪个判断？能不能用现有材料或其他方式补。
+【约束】<b>不要只复述</b>；每一条都给依据（指向哪份材料哪一段）。
+【输出】矛盾 / 干扰项 / 缺失 三张清单。
+【边界】本轮不下结论、不做方案。</pre></div>
+  <p class="role" style="margin-top:8px;"><b>追问（体现"纠错迭代"）：</b>"你识别得对。但我要追问一层：<b>［某方案］</b>除了<b>［表面缺点］</b>，还有没有更深的问题？我担心 <b>［你的隐忧］</b> 本身可能不成立。"</p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P4</span><span class="m-title">轮 4 · 外部补盲（打破信息孤岛）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P4</span><pre>【输入】本题背景与我们已有的交叉结果（见前文）。
+【任务】用搜索功能补充三类外部基准，并并入分析：
+1）<b>［本题领域的主流解法 / 通行框架］</b>；
+2）<b>［可对比的公开数据或行业区间］</b>；
+3）<b>［同类公司在类似阶段踩过的坑］</b>。
+【约束】补完必须说清每个基准和我们<b>哪里可比、哪里不可比</b>，<b>不要直接套</b>；每条标注来源。
+【输出】外部基准清单 + 可比性判断 + 并入后的分析更新。
+【边界】只补参照系，不推翻已确认的事实结论。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag i">P5</span><span class="m-title">轮 5 · 填 Insight（分块填，别一次要完）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P5-a 问题判断与证据链</span><pre>【输入】题干 + 轮 3 交叉结果 + 轮 4 外部基准。
+【任务】填 Insight 第一块：问题判断与证据链。
+1）把"XX 低 / XX 差"这种模糊说法，改写成"在［范围/周期/场景］，［对象］出现［可观察差距］，相对［基线］影响［结果］"；
+2）建证据链：把信息三分为<b>【已验证事实 / 用户主观反馈 / 待验证假设】</b>；
+3）指出至少 1 条<b>数据与反馈之间的张力</b>。
+【约束】每条结论标来源，<b>【数据】/【反馈】/【推导】</b>三选一；说不清来源的标"数据不足"并写明补什么。
+【输出】问题判断段 + 证据链表 + 张力至少 1 条。
+【边界】只填这一块，做完先复述结论，我确认后再进下一块。</pre></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P5-b 分层 + 漏斗</span><pre>【输入】题干漏斗数据（如有）+ 用户反馈 + 上一步的问题判断。
+【任务】填 Insight 第二块：分层 + 漏斗诊断。
+1）用户/对象分层：维度由本题定（生命周期/行为/价值/来源等，<b>你建议并说理由</b>），每层给定义、判定规则、样本量、主要障碍；
+2）场景分层：拆 2–3 个，每个写全 触发原因 + 目标任务 + 前置状态 + 时间压力 + 环境 + 成功标准；
+3）漏斗诊断：环节按真实路径定，每环给转化率、流失率、<b>绝对流失量</b>；并<b>把分层回挂</b>——指出哪类人在哪类场景的哪一环掉得最狠。
+【约束】断点判据用双条件：<b>绝对流失量大 且 相对转化率低</b>，两条同时满足才算；无直接指标的环节用代理指标并标注"代理指标"；没有数据的环节标"数据不足"，不要用估算充数。
+【输出】分层表 + 场景表 + 分层漏斗差异表 + Top 2–3 断点。
+【边界】不做根因推导，那是下一块。</pre></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P5-c 根因链（最关键）</span><pre>【输入】漏斗断点 + 分层差异 + 交叉结果。
+【任务】填 Insight 第三块：根因机制——这是整份答案的核心。
+1）至少 3 条根因链，每条写全四段：<b>现象（哪类人·哪一环·什么表现）→ 机制（为什么这环会断、为什么这类人更敏感）→ 原因（底层触发因素）→ 结果（对核心结果的具体影响）</b>；
+2）至少 1 条<b>跨环节联动</b>（不是单点失效，是环节之间配合断了）；
+3）至少 1 条<b>不是从材料里直接抄的</b>独立判断——由数据 + 反馈 + 分层交叉推出的新洞察。
+【约束】每条标证据来源；<b>主动列竞争解释</b>（还有什么别的可能、为什么排除）；区分"已验证根因 / 待验证假设"，别混着写；<b>禁止把现象重命名当原因</b>（"活跃度低""用户没感知"都不是根因）。
+【输出】按影响与证据排序的根因清单。
+【边界】不做方案，方案在 Strategy 段。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag i">P6</span><span class="m-title">轮 6 · 压力测试（你给判断，让它反驳）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P6</span><pre>【输入】我的关键判断：<b>本题最关键的根因是［你的判断］，理由是［具体依据，指向材料哪一段/哪个数据］</b>。
+【任务】你做对手，从三个角度反驳我：
+1）这个判断如果错了，最可能错在哪；
+2）材料里有没有能证伪它的证据；
+3）哪条竞争解释比它更能解释全部现象。
+【约束】<b>不要说"也有可能存在其他因素"这种空话</b>——要拿出具体证据或具体推理；如果你反驳不倒我，明确说"我反驳不倒，理由是……"，不要为了显得中立而和稀泥。
+【输出】逐条反驳，或明确承认反驳不倒。
+【边界】只压测这个判断，不引入全新方向。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag s">P7</span><span class="m-title">轮 7 · 填 Strategy（方案 → 取舍 → 动作）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P7</span><pre>【输入】已确认的根因清单 + 收益/风险边界 + 资源约束。
+【任务】填 Strategy：
+1）围绕根因发散 <b>2–3 个有实质差异</b>的方向，每个说清：对应哪类人、挂哪条根因（<b>标编号</b>）、修复哪个环节或跨环节断点、预期收益、成本与依赖、主要风险、适用条件；给 ROI <b>量级</b>预估即可，不编精确财务数；
+2）用 ICE 或 RICE 排序，说清比较周期和单位；
+3）<b>主动列 1–2 个不采纳的方向及理由</b>，理由挂回根因/漏斗/分层的证据；
+4）收敛到 1–2 项写成可执行动作，六要素一项都不能少：<b>目标用户 / 触发场景 / 展示内容或交互方式 / 频次·节奏·阈值 / 与现有体系的关系 / 成功判定方式</b>；涉及提醒·引导·触达的，必给<b>触发条件 + 频次上限 + 观察周期</b>；
+5）<b>明确写"不做什么"</b>，以及选了 A 就放弃了什么；
+6）方案覆盖面自查：<b>竞品对标 / 商业化 / 设计 / 多版本迭代路径 / 质量保障</b> 五个侧面逐一过一遍，不适用的明确写"本题不适用"，<b>不要默认跳过</b>。
+【约束】方案必须映射回根因，禁止写成"多发券 / 降价 / 一刀切活动"；禁止"适当 / 优化"类模糊词。
+【输出】候选方案对比表 + 优先级决策 + 可执行动作（六要素）+ 不做什么。
+【边界】不做灰度与指标体系，那是 Operation 段。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P8</span><span class="m-title">轮 8 · 质疑（触发才用，模板）</span></div>
+  <p class="role">触发条件见《打法》第 ⑧ 步。模板要点：<b>指出它哪个具体判断错了 + 证据 + 你认为对的 + 要求重答</b>。</p>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P8</span><pre>【输入】你刚才的结论：<b>［复述它的具体结论］</b>。
+【我的质疑——三件套】
+1）<b>错在哪</b>：［具体错在哪 + 证据来自哪份材料哪一段］；
+2）<b>后果</b>：按你这个做法会导致［后果］；
+3）<b>我的版本</b>：［我的判断］，因为［理由］。
+【要求】在 <b>［我指出的前提/约束］</b> 下重新回答；<b>只改这一部分</b>，其他已确认的内容保持不变。
+【输出】修正后的该部分结论。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag o">P9</span><span class="m-title">轮 9 · 填 Operation（指标 / 节奏 / 风险）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P9</span><pre>【输入】已确认的优先方案与动作规则 + 漏斗环节 + 风险红线。
+【任务】填 Operation：让方案可验证、可回滚。
+1）<b>三类指标</b>：核心结果 / 过程机制 / <b>护栏</b>（护栏 = 不可接受的副作用，具体指标你按本题建议，但<b>这一项不能省</b>）；
+2）<b>三条线</b>：成功线 / 失败线 / <b>回滚线</b>，每条都要给具体数字或相对变化；
+3）每个阈值配四件套：<b>数值 + 观察窗口 + 比较方式/对照组 + 判定时点</b>；
+4）灰度节奏：维度（用户/地域/流量比例）+ 分批节奏，并说明"这批是谁的百分之几、为什么够支持判断"；
+5）验证设计与显著性处理；
+6）<b>回滚预案</b>：触发什么条件切回、怎么切、切回后已产生的数据/结果怎么处理；
+7）风险清单：逐条写"风险 + 谁受影响 + 怎么监测 + 触发后怎么办"。
+【约束】阈值<b>没有依据就写"待定 + 确定方法 + 责任人 + 补齐时间"</b>，不要编数字；安全止损<b>不必等</b>效果检验显著。
+【输出】验证方案 + 完整阈值表 + 回滚预案。
+【边界】不重新分析根因、不新增候选方案。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag o">P10</span><span class="m-title">轮 10 · 换角色校验 + 消灭模糊词</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P10-a 换角色审</span><pre>【输入】我们的完整方案（见前文）。
+【任务】以 <b>［选一个最刁的角色：CFO / 业务方负责人 / 一线执行人 / 合规］</b> 的视角审这份方案，核心一问："你这个方案凭什么 <b>［值这个投入 / 能被信任 / 真能落地］</b>？"
+【要求】以该角色逐条挑毛病，然后把验收标准改写成<b>可量化、可验收、不留模糊</b>的指标。
+【输出】该角色视角的问题清单 + 逐条改写后的验收标准。</pre></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P10-b 虚词清零</span><pre>【输入】我这份交付物全文。
+【任务】挑出所有无法验收的表述，逐条给可验收的改写版本。
+【约束】重点排查这类词：<b>适当、合理、优化、提升、加强、确保、持续、尽快、显著、大幅</b>；每条改写必须能被第三方判定"做到还是没做到"；改不了的，直接标"此处无法验收"，我来决定是补证据还是砍掉这句话。
+【输出】"模糊表述 → 可验收改写"对照表。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P11</span><span class="m-title">轮 11 · 整合成交付物</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P11</span><pre>【输入】前面各轮已确认的全部内容。
+【任务】整合成完整交付物：
+1）结构按题目要求的格式和命名；
+2）<b>只能使用我们已经确认过的结论和数据</b>，不得新增任何未经讨论的内容；
+3）凡是来源为"推导"或"数据不足"的地方，<b>保留标注</b>，不要悄悄写成事实；
+4）附一节<b>「这套方法下次怎么复用」</b>：把本次的判断框架、指标口径、验证套路沉淀成可复用的东西；
+5）附一小节<b>「人机分工」</b>：哪些判断是我下的、哪些执行交给 AI——直接回应"驾驭 AI 提升产出"这条考察点。
+【输出】完整交付物，保存到 <b>［路径］</b>，完成后告诉我完整路径和文件清单。
+【边界】整合时发现前后矛盾的，先停下来问我，不要自行取舍。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P12</span><span class="m-title">轮 12 · Demo 生成（无网硬约束）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P12-a 先要大纲</span><pre>【全局约束】接下来所有网页工作遵守：生成<b>纯静态单页 HTML</b>，不依赖任何外网 CDN、外部字体或 JS 库（云桌面可能没网）；双击浏览器能打开；中文 utf-8 不乱码；浅色主题、信息密度高；图表用纯 CSS 或内联 SVG 手写，<b>不要引 Chart.js / ECharts</b>；不要生成需要 npm install 或构建的项目。
+【输入】我们确认的分析结论（读取 <b>［分析文件路径］</b>）。
+【任务】先给我 Demo 结构大纲：顶部一句话核心结论、然后分哪些板块、每块放什么。<b>现在不要写代码。</b></pre></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P12-b 生成 + 自检</span><pre>【任务】按确认的结构生成单页 HTML。内容只引用我们分析过的结论（读取 <b>［分析文件路径］</b>），<b>不要编造数据</b>，数据不足处标"数据不足"；先出完整版，样式从简，我要先确认信息对不对。
+【自检，生成后逐条确认】① 有没有外链资源（有就内联化或删掉）；② 中文编码对不对；③ file:// 直接打开能不能正常显示；④ 有没有我们没分析过的编造数据。
+【输出】修完问题后告诉我文件保存的完整路径。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">极简</span><span class="m-title">只剩 10 分钟时的极简 Demo（其余全砍，只留三块）</span></div>
+  <div class="box must"><b>只保留三块，其余全砍</b><ul>
+    <li>顶部一句话核心结论</li>
+    <li>漏斗断点图（纯 CSS 横条，标 Top 2~3 断点）</li>
+    <li>动作表（含触发条件 / 频次上限 / 观察周期）</li>
+  </ul></div>
+  <p class="role" style="margin-top:8px;">这三块已经能证明你"定位准、能落地"，比摊大饼却每块都薄强。所以 <b>Demo 的 v1 应该在产出段就边做边出</b>，别等整合完才从头开始。</p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">P13</span><span class="m-title">轮 13 · 自检提交</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">P13</span><pre>【任务】交卷前最后核对，逐条回答是/否：
+1）文件数量、命名、分类<b>完全符合题目要求</b>吗？
+2）所有数据/结论都有来源标注吗？有没有编造的规模/财务/合同数据？
+3）还有"适当/优化/显著提升/确保顺利"这类无法验收的词吗？
+4）根因是"机制链"还是"现象重命名"？
+5）护栏指标在吗？失败线和回滚线都有数字吗？
+6）每个拍板的方案后面都有 Plan B 吗？
+7）"方法论沉淀"和"人机分工"两节都在吗？
+8）Demo 用 file:// 打开正常吗？无外链？无乱码？
+9）压缩包打包好了吗？<b>现在离截止还有多久？</b>
+【纪律】任何一条为"否"，先补再交。时间不够就<b>先交一版保底</b>。</pre></div>
+</div>
+
+<!-- ================= D ================= -->
+<h2 class="phase" id="d">D · 范例与对照</h2>
+<p class="phase-note">下面都是"形状示范"，<b>括号里的内容要按当题业务替换</b>——别照抄数字和场景。</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">例 1</span><span class="m-title">交互话术：点菜员 vs 主角</span></div>
+  <table>
+    <tr><th style="width:50%">❌ 把判断权交出去</th><th>✔️ 你是主角</th></tr>
+    <tr><td>"AI，你觉得这个项目先做哪一步？"</td><td>"我的判断是先做 A 再做 B，因为 <b>A 卡着 B 的交付，B 做早了也白做</b>。你帮我验证这个顺序有没有漏洞。"</td></tr>
+    <tr><td>"帮我分析一下这批材料。"</td><td>"我读完材料的初步判断是 <b>［一句话］</b>。你按这个方向深挖，并指出我哪里理解错了。"</td></tr>
+    <tr><td>"请你说一下项目的关键是什么，并给我建议。"</td><td>"我认为关键是 <b>［具体那一件事］</b>，因为 <b>［具体理由/教训］</b>。你反驳我，或告诉我更该先解决什么。"</td></tr>
+    <tr><td>"还有其他可能吗？"</td><td>"如果这个判断错了，最可能错在哪？<b>材料里有没有能证伪它的证据？</b>拿不出证据就直说反驳不倒。"</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">例 2</span><span class="m-title">质疑：空泛 vs 三件套</span></div>
+  <div class="two">
+    <div class="box miss"><b>❌ 空泛（比不质疑还糟）</b><ul>
+      <li>"你这样做不太对吧？"</li>
+      <li>"你有没有抓住关键？"</li>
+      <li>"我觉得这个方案还不够好。"</li>
+      <li>→ 姿态很足、内容为零，一眼看穿你没想清楚</li>
+    </ul></div>
+    <div class="box must"><b>✔️ 三件套 = 错在哪 + 证据 + 我的版本</b><ul>
+      <li><b>错在哪</b>："你判断 X 方案可行，但你没把 <b>［某部门休假/某依赖延期］</b> 算进去"</li>
+      <li><b>证据</b>："材料第 3 页写明 <b>［依据］</b>，按你这张表会延期 <b>［N］</b> 天"</li>
+      <li><b>我的版本</b>："我建议把 A 和 B 对调，先解决 <b>［X］</b>"</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">例 3</span><span class="m-title">模糊词 → 可验收改写（"求极致"的主战场）</span></div>
+  <table>
+    <tr><th style="width:22%">模糊说法</th><th style="width:30%">为什么验收不了</th><th>可验收改写</th></tr>
+    <tr><td>确保进度顺利</td><td>什么叫顺利？谁判定？</td><td>第 3 周完成 80% 的测试用例，通过率 ≥ 95%</td></tr>
+    <tr><td>适当提醒用户</td><td>没触发条件、没频次、没上限</td><td>用户在［环节］停留 &gt; 30s 且无有效操作时提示 1 次；同一用户 24h 内最多 1 次</td></tr>
+    <tr><td>提升用户满意度</td><td>没测量方式、没样本要求</td><td>任务完成后 7 日内满意度评分 ≥ 4.2，且有效样本 ≥ 200</td></tr>
+    <tr><td>优化推荐效果</td><td>没方向、没判据</td><td>推荐点击率相对提升 ≥ 5%，且 95% 置信区间下界 &gt; 0</td></tr>
+    <tr><td>加强风险控制</td><td>空泛，无法判断是否做到</td><td>异常订单拦截率 ≥ 99%，误拦截率 ≤ 0.5%，超阈值自动熔断并告警到［责任人］</td></tr>
+    <tr><td>持续迭代优化</td><td>没节奏、没停止条件</td><td>每两周复盘一次，按［指标］决定继续 / 调整 / 停止，连续 2 个周期无改善即停止投入</td></tr>
+    <tr><td>降低运营成本</td><td>没口径、没基线</td><td>单次任务人工处理时长下降 ≥ 20%（对比改动前 4 周同口径均值）</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag i">例 4</span><span class="m-title">根因链四段（结构示范，内容按题替换）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">根因链示范</span><pre><b>现象</b>：在［场景/周期］，［某类用户］在［某环节］的完成率明显低于其他群体，且近［周期］持续走低。
+       （这是可观察事实，不是原因）
+
+<b>机制</b>：该环节要求用户自行理解并操作［X］；这类用户缺少［某前置认知/准备］，
+       因此在这一环的判断成本远高于其他群体；一旦首次失败，系统又没有给出
+       可理解的失败原因和可恢复路径，用户就直接放弃而不是重试。
+       （为什么这环会断、为什么这类人更敏感）
+
+<b>原因</b>：底层是"状态与反馈不可见"——系统没有把当前进展、失败原因、下一步
+       明确暴露给用户，用户只能靠猜。
+       （底层触发因素，不是现象的重命名）
+
+<b>结果</b>：该环节流失占整体流失的［比例］，直接压低［核心结果］；
+       且首次失败的用户后续复用概率显著更低，影响是长期的。
+
+<b>证据</b>：【数据】［某报表/口径］；【反馈】［原话/工单，N 条］；【推导】［推断依据］
+<b>竞争解释</b>：也可能是［另一种解释］，排除依据是［为什么排除］。
+<b>状态</b>：已验证根因 / 待验证假设（二选一，不要含糊）</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag s">例 5</span><span class="m-title">动作六要素（结构示范）</span></div>
+  <div class="say"><button class="copy-btn">复制</button><span class="no-tag">动作六要素示范</span><pre><b>目标用户</b>：［某分层］用户，且处于［某场景］
+<b>触发场景</b>：进入［某环节］后 30s 内无任何有效操作
+<b>展示内容/交互</b>：在当前页面内给出"当前状态 + 下一步 + 一键继续"的轻量提示条，<b>不跳出、不遮挡</b>
+<b>频次·节奏·阈值</b>：同一用户同一环节 24h 内最多 1 次；同一次会话最多 2 次；与［现有功能］冲突时不展示
+<b>与现有体系关系</b>：复用现有［组件/埋点/权限］，不新增独立入口
+<b>成功判定方式</b>：该环节完成率相对提升 ≥［X］，<b>且</b>被提示用户的投诉率、退出率不升高（护栏）
+
+<b>Plan B</b>：若上线后 7 天内该环节完成率提升 &lt;［X］，或投诉率上升 &gt;［Y］，
+          则关闭该提示，回退到［原方案］，并转向验证［备选机制］。
+<b>不做什么</b>：不做全量弹窗、不做跨渠道推送、不靠补贴拉动。</pre></div>
+</div>
+
+<!-- ================= E ================= -->
+<h2 class="phase" id="e">E · 各段要点与易错</h2>
+
+<div class="card">
+  <div class="m-head"><span class="tag i">Insight</span><span class="m-title">最容易"看起来很满、其实很空"的一段</span></div>
+  <div class="two">
+    <div class="box must"><b>要点</b><ul>
+      <li>每个结论后面必须能追到【数据】/【反馈】/【推导】之一</li>
+      <li>根因一定要有"机制"层，跳了这层推导链就断了</li>
+      <li>至少留一条"不是抄材料、是你推出来的"判断——这是区分度</li>
+      <li>反馈必须挂到漏斗环节上，否则就是无法对照的噪音</li>
+      <li>交叉验证后要<b>回头修正初判</b>，别一路走到黑</li>
+    </ul></div>
+    <div class="box miss"><b>易错</b><ul>
+      <li>把现象当根因（"活跃度低""用户没感知"都不是根因）</li>
+      <li>只看转化率不看绝对流失量（小环节改了白改）</li>
+      <li>分层完不回挂漏斗 = 自嗨</li>
+      <li>样本比例直接外推成总体比例</li>
+      <li>不标证据来源 → 评委无法倒查</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag s">Strategy</span><span class="m-title">最能体现"取舍"的一段</span></div>
+  <div class="two">
+    <div class="box must"><b>要点</b><ul>
+      <li>方案必须挂回根因编号，评委一定会倒推</li>
+      <li>≥2 个方向才有取舍，只有 1 个 = 没比较</li>
+      <li>写清"不做什么"和"选了 A 放弃了什么"</li>
+      <li>动作六要素一项不能少</li>
+      <li>触达类必给触发条件 + 频次上限 + 观察周期</li>
+    </ul></div>
+    <div class="box miss"><b>易错</b><ul>
+      <li>偷懒写成"多发券 / 降价 / 一刀切活动"</li>
+      <li>不做 ROI 预估，显得没算过账</li>
+      <li>只说好处不说代价（显得没做过权衡）</li>
+      <li>"适当提醒""持续优化"——一出现执行性归零</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag o">Operation</span><span class="m-title">最见落地感的一段</span></div>
+  <div class="two">
+    <div class="box must"><b>要点</b><ul>
+      <li>三类指标：核心结果 / 过程机制 / <b>护栏</b></li>
+      <li>三条线：成功 / 失败 / <b>回滚</b>，都要有数字</li>
+      <li>阈值四件套：数值 + 观察窗口 + 对照组 + 判定时点</li>
+      <li>回滚预案要写清切回后已有数据/结果怎么办</li>
+      <li>阈值没依据就写"待定 + 确定方法 + 责任人 + 时间"</li>
+    </ul></div>
+    <div class="box miss"><b>易错</b><ul>
+      <li><b>漏护栏指标（最多人漏的一项）</b></li>
+      <li>只有成功线没有失败线和回滚线（那叫许愿不叫验证）</li>
+      <li>不做显著性处理，被随机波动骗</li>
+      <li>灰度不设对照组</li>
+      <li>Demo 引 CDN → 无网白屏（头号死法）</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="tip">
+<b>最后提醒：</b>Prompt 是脚手架不是答案。所有方括号都要你现场填——<b>填进去的那个判断，才是你真正在被评分的东西</b>。
+AI 能帮你读材料、整理信息、算数据、生成方案，但最后决定这份东西能不能交的，还是你自己的判断：逻辑对不对？数据准不准？方案到底能不能落地？
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.copy-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.parentElement.querySelector('pre');
+    var text = pre.innerText;
+    function done(){ btn.textContent='已复制'; setTimeout(function(){btn.textContent='复制';},1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      var ta=document.createElement('textarea'); ta.value=text;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); done();
+    }
+  });
+});
+</script>
+</body>
+</html>
