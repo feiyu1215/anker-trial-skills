@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安克 AI 飞行员试炼 · 完整打法</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --line:#e3e6ea; --text:#1f2933;
+    --muted:#5b6873; --accent:#185fa5; --accent-bg:#e6f1fb;
+    --ok:#0f6e56; --ok-bg:#e1f5ee; --no:#8a2020; --no-bg:#fcebeb;
+    --warn:#8a4b08; --warn-bg:#faeeda;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Microsoft YaHei","PingFang SC",-apple-system,Segoe UI,sans-serif;
+    font-size:14px;line-height:1.75;}
+  .wrap{max-width:1020px;margin:0 auto;padding:32px 20px 64px;}
+  h1{font-size:23px;margin:0 0 6px;font-weight:600;}
+  .sub{color:var(--muted);margin:0 0 20px;font-size:13px;}
+  .phase{font-size:18px;font-weight:600;margin:32px 0 2px;padding-top:6px;}
+  .phase-note{color:var(--muted);font-size:13px;margin:0 0 14px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:16px 20px;margin:12px 0;scroll-margin-top:16px;}
+  .m-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:4px;}
+  .tag{font-size:12px;font-weight:600;color:#fff;border-radius:6px;padding:2px 8px;}
+  .tag.t0{background:#6b7280}.tag.t1{background:#185fa5}.tag.t2{background:#0f6e56}.tag.t3{background:#854f0b}
+  .m-title{font-size:16px;font-weight:600;}
+  .role{margin:0 0 10px;color:var(--muted);font-size:13px;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:780px){.two{grid-template-columns:1fr}}
+  .box{border-radius:8px;padding:10px 13px;font-size:13px;}
+  .box.must{background:var(--ok-bg);color:#0b4f3f;}
+  .box.miss{background:var(--no-bg);color:var(--no);}
+  .box b{display:block;font-size:12px;margin-bottom:5px;letter-spacing:.3px;}
+  .box ul{margin:0;padding-left:17px;}
+  .box li{margin:3px 0;}
+  .say{position:relative;background:#f8f9fb;border:1px solid var(--line);
+    border-radius:8px;padding:12px 14px;margin:10px 0;}
+  .say pre{margin:0;white-space:pre-wrap;word-break:break-word;
+    font-family:Consolas,"Microsoft YaHei",monospace;font-size:12.5px;
+    line-height:1.75;color:#243b53;}
+  .copy-btn{position:absolute;top:8px;right:8px;font-size:11px;background:var(--card);
+    border:1px solid var(--line);border-radius:6px;padding:3px 9px;cursor:pointer;color:var(--muted);}
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .hi{background:var(--accent-bg);border-radius:10px;padding:12px 16px;font-size:13.5px;margin:12px 0;}
+  .tip{background:var(--warn-bg);color:var(--warn);border-radius:10px;
+    padding:12px 16px;font-size:13.5px;margin:12px 0;}
+  .toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;}
+  .toc h3{margin:0 0 10px;font-size:15px;font-weight:600;}
+  .toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;}
+  @media(max-width:680px){.toc-grid{grid-template-columns:1fr}}
+  .toc a{color:var(--accent);text-decoration:none;font-size:13.5px;padding:3px 0;
+    border-bottom:1px dashed transparent;}
+  .toc a:hover{border-bottom-color:var(--accent);}
+  table{border-collapse:collapse;width:100%;font-size:13px;}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+  th{background:#eef1f5;font-weight:600;}
+  .chk{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;}
+  .chk label{display:block;margin:6px 0;font-size:13.5px;cursor:pointer;}
+  .chk input{margin-right:8px;vertical-align:middle;}
+  code{background:#eef1f5;border-radius:4px;padding:1px 5px;font-size:12.5px;}
+  .no{color:var(--no);}
+  .yes{color:var(--ok);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>安克 AI 飞行员试炼 · 完整打法</h1>
+<p class="sub">以多人实战经验为主干重排 ｜ 吸取已有分析框架中站得住的部分 ｜ 校招 3h 主表（附 2h 压缩版）</p>
+
+<div class="hi">
+<b>先亮一句总纲：这不是考「你会不会用 AI」，是考「你能不能让 AI 替你干活，而判断权始终在你手里」。</b>
+录屏全程对着你——评委要看的是<b>谁在思考</b>。你每件事都问"AI 你觉得呢"，评委看到的就是 AI 在替你想；
+你先给判断再让 AI 挑错，主角才是你。
+</div>
+
+<div class="toc">
+  <h3>目录（点击跳转）</h3>
+  <div class="toc-grid">
+    <a href="#score">① 评委怎么打分（力气往哪使）</a>
+    <a href="#value">② 三条价值观 = 隐藏评分主线</a>
+    <a href="#time">③ 时间轴总表</a>
+    <a href="#p0">④ 考前 · 30 分钟体验时间</a>
+    <a href="#p1">⑤ 定向 · 20–28 min</a>
+    <a href="#p2">⑥ 框架先行 · 28–43 min</a>
+    <a href="#p3">⑦ 材料交叉与填充 · 43–101 min</a>
+    <a href="#p4">⑧ 全程 · 交互姿态（含何时质疑）</a>
+    <a href="#p5">⑨ 产出与交付 · 101–165 min</a>
+    <a href="#p6">⑩ 提交 · 165–180 min</a>
+    <a href="#check">⑪ 交卷前自检清单</a>
+    <a href="#m">附 · 分析内容清单（M1–M10）</a>
+  </div>
+</div>
+
+<!-- ================= ① 评分 ================= -->
+<h2 class="phase" id="score">① 评委怎么打分（先搞清力气往哪使）</h2>
+<p class="phase-note">打分看 4 件事，<b>优先级从高到低</b>。权重最高的是 Prompt 能力，不是"会不会用工具"。</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:60px">优先级</th><th style="width:150px">维度</th><th>具体在看什么</th></tr>
+    <tr><td><b>1</b></td><td><b>Prompt 能力</b></td><td>指令是否直指问题核心、表达是否结构化、逻辑与约束是否清晰、<b>角色定义是否完整</b></td></tr>
+    <tr><td><b>2</b></td><td><b>任务拆解</b></td><td>能不能把一个大业务需求拆成子任务，并<b>控制 AI 的边界</b>（不让它跑偏、不让它一把梭）</td></tr>
+    <tr><td><b>3</b></td><td><b>交付物质量</b></td><td>输出文件是否规范、可复用、符合业务标准</td></tr>
+    <tr><td><b>4</b></td><td><b>纠错迭代</b></td><td>能不能发现 AI 出错，并修正 prompt 或校验结果</td></tr>
+  </table>
+  <div class="tip" style="margin-top:14px;">
+    <b>扣分重灾区（两条，踩了基本没救）：</b><br>
+    ① <b>没有自己的思考</b>、对 AI 没有限制性要求、输出模糊（"帮我做一份 XX 分析"这种）。<br>
+    ② <b>放任 AI 自由发挥、不核验</b>，直接提交一份带幻觉 / 内容或格式错误的交付物。
+  </div>
+</div>
+
+<!-- ================= ② 价值观 ================= -->
+<div class="card">
+  <div class="m-head"><span class="tag t1">加分项</span><span class="m-title">材料里点名提到、但最容易漏的 3 件事</span></div>
+  <table>
+    <tr><th style="width:110px">动作</th><th>怎么落地（不是知道就行，要能做出来）</th></tr>
+    <tr>
+      <td><b>体现好奇心</b></td>
+      <td>针对题目里<b>某个具体的点</b>主动发问，而不是泛泛追问。
+      例："材料第 3 页这个数和我理解的业务口径对不上，你帮我核一下是统计口径变了还是口径迁移？"
+      ——<b>问到具体的点上才叫好奇心</b>，"还有其他因素吗"不算</td>
+    </tr>
+    <tr>
+      <td><b>体现学习能力</b></td>
+      <td>让 AI 教你，然后<b>把学到的用回你的判断里</b>。
+      例："先给我讲清楚这个领域的通行框架和关键术语，我来判断哪个适合这题"
+      ——学完要用，听过不算</td>
+    </tr>
+    <tr>
+      <td><b>装 skills（可选）</b></td>
+      <td>环境允许就装，能省重复功夫。<b>取决于云桌面权限与时间，不作为必做</b></td>
+    </tr>
+  </table>
+</div>
+
+<h2 class="phase" id="value">② 三条价值观 = 隐藏评分主线</h2>
+<p class="phase-note">材料里反复强调：这是隐藏评分主线。别背，要看<b>在试炼里各自落在哪个动作上</b>。</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:110px">价值观</th><th style="width:200px">原意</th><th>在试炼里怎么体现（可落地）</th></tr>
+    <tr>
+      <td><b>第一性</b></td>
+      <td>追问本质，别停在表面；不从众、不套模板</td>
+      <td>根因要<b>扒开一层</b>——表面是 A，本质是 B。别一上来就套"漏斗/画像/竞品"三件套；
+      对别人（和 AI）给的通用框架要追问一句"这题真的是这个吗"</td>
+    </tr>
+    <tr>
+      <td><b>求极致</b></td>
+      <td>不满足"能用"，要"更好更准"；把模糊的话改成可量化标准</td>
+      <td>交付物里<b>消灭模糊词</b>——"适当提醒""持续优化""显著提升"一律改成可验收的数字或判据；
+      方案要敢和"业界最佳实践"比一句，说出你比它好在哪（或承认不如）</td>
+    </tr>
+    <tr>
+      <td><b>共成长</b></td>
+      <td>不只顾自己，会带人、会沉淀</td>
+      <td>交付物里留一节<b>「这套方法下次怎么复用」</b>——不是给一个一次性答案，而是给出可复用的判断框架/指标口径。
+      这是把"一个人的一次性项目"变成"下次更快"的东西。<br>
+      <b>另外原材料的"会带人"别漏</b>：在试炼里 = 你能不能<b>调度多个 AI 窗口 / sub-agent 分工协作</b>（一个跑数据、一个跑方案、一个做整合）——这本身就是"带团队"的证据，<b>录屏里看得见</b></td>
+    </tr>
+  </table>
+</div>
+
+<!-- ================= ③ 时间轴 ================= -->
+<h2 class="phase" id="time">③ 时间轴总表</h2>
+<p class="phase-note">时间是最硬的约束。<b>先定表，再干活</b>——开考第 1 步就该让 AI 帮你排这个表。</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:130px">阶段</th><th style="width:110px">校招 3h</th><th style="width:110px">社招 2h</th><th>干什么</th></tr>
+    <tr><td><b>学习</b></td><td>0–20</td><td>0–12</td><td><b>官方教学别跳过——它是评分标准的预告</b>：评委在看什么，教学里都演了。读的时候同步跑「下笔四问」，顺便验证环境</td></tr>
+    <tr><td><b>定向</b></td><td>20–28</td><td>12–19</td><td>自己先读题 → <b>翻到最底下看最终要交付什么</b> → 建文件夹 → 让 AI 排时间表</td></tr>
+    <tr><td><b>框架</b></td><td>28–43</td><td>19–32</td><td>给 AI 定角色 → 先要框架不要方案 → 自己有判断后多轮完善框架</td></tr>
+    <tr><td><b>材料 + 填充</b></td><td>43–101</td><td>32–72</td><td>让 AI 交叉对比材料（矛盾/干扰/缺失）→ 联网补外部基准 → 逐项填框架（Insight 侧占大头，别省）</td></tr>
+    <tr><td><b>产出</b></td><td>101–138</td><td>72–97</td><td>填 Strategy / Operation，边做边输出（<b>Demo v1 也在这里顺手出</b>，别等最后）</td></tr>
+    <tr><td><b>定稿</b></td><td>138–165</td><td>97–105</td><td>换角色视角做最后校验 → 虚词清零 → 整合 → Demo 定稿 → 存到指定路径</td></tr>
+    <tr><td><b>提交</b></td><td><b>165–180</b></td><td><b>105–120</b></td><td><b>留 15 分钟</b>：自检 + 打包 + 提交（可先交后补）</td></tr>
+  </table>
+  <p class="role" style="margin-top:10px;">
+  ⚠️ <b>学习 20 分钟 + 提交 15 分钟 = 35 分钟硬成本，先扣再排</b>，别按 180 分钟满打满算排产出行程。<br>
+  ⚠️ 真实翻车点：上下文越来越长 → AI 变慢甚至自动 compact；云桌面卡；导出大文件生成速度不可控。
+  <b>所以必须"边做边输出"，绝不最后一刻统一生成。</b></p>
+</div>
+
+<!-- ================= ④ 考前 ================= -->
+<h2 class="phase" id="p0">④ 考前 · 珍惜 30 分钟云电脑体验时间</h2>
+<div class="card">
+  <div class="box must">
+    <b>这一条被多人提到，且和后面的"翻车点"直接相关</b>
+    <ul>
+      <li>体验时间进去后<b>能点的都点一遍、能用的都用一遍</b>：云桌面、VS Code（Claude Code）、终端、文件管理器、能不能联网、能不能读图片/链接</li>
+      <li>不懂的<b>退出来恶补</b>，准备好了再点正式测试——<b>激活账号才开始倒计时，不可暂停不可重置</b></li>
+      <li>正式测的时候<b>网络环境一定要好</b>（有人反馈阿里云返回慢，直接影响节奏）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= ⑤ 定向 ================= -->
+<h2 class="phase" id="p1">⑤ 定向 · 20–28 min（别急着分析）</h2>
+<p class="phase-note">这 8 分钟决定你会不会做错方向。多数人一上来就把材料丢给 AI，结果做完了才发现交付物不对。</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">学习段</span><span class="m-title">0–20 min · 官方教学别跳过</span></div>
+  <div class="box must"><b>为什么这 20 分钟值</b><ul>
+    <li>教学材料就是<b>评分标准的预告</b>——评委在看什么、什么叫好答案，里面都演了</li>
+    <li>读的时候<b>同步跑下面的「下笔四问」</b>，读完直接进定向，一分钟不浪费</li>
+    <li>顺便验证环境：能否联网、<code>/run</code> <code>/export</code> 这些命令在不在（30 分钟体验时间里没试完的在这里补）</li>
+  </ul></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag g">读题</span><span class="m-title">下笔四问（材料原话的这条思考链非常好用）</span></div>
+  <div class="box must"><b>关键术语是什么 → 业务流程是什么 → 问题到底出在哪里 → 最后到底要解决什么</b><ul>
+    <li>按顺序走，<b>别跳</b>：术语没搞懂就往下走，后面全是在猜</li>
+    <li>每条都先给自己一个答案，再去和 AI 的比——<b>有你的一版，才看得出它偏在哪</b></li>
+    <li>画不出业务流程，说明你还没读懂这题的业务，此时把材料丢给 AI 等于被它牵着走</li>
+  </ul></div>
+  <p class="role" style="margin-top:8px;">
+  <b>秒回要警惕：</b>太快、太顺、太通用的回答，先怀疑它没吃到你的材料和约束——
+  直接问一句"你是谁 / 你读到了哪些材料"，确认状态再往下走。</p>
+</div>
+
+
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">顺序</span><span class="m-title">正确的开考动作</span></div>
+  <div class="box must">
+    <ul>
+      <li><b>先自己快速浏览一遍题文</b>——你是总工，你得先知道接下来要干嘛，<b>避免被 AI 带偏</b>。
+        这之后再复制粘贴给 AI 分析，顺便对比"你和 AI 的理解差在哪、谁漏了什么"</li>
+      <li><b>先直接翻到最下面看「最终要交付什么」</b>——这是材料里性价比最高的一条建议。
+        知道了终点，才知道框架该有哪些板块</li>
+      <li><b>先在云桌面建好要提交的文件夹</b>，按题目要求完成命名和分类，把背景材料、原始数据、工程文件都丢进去</li>
+      <li><b>打开 VS Code 第一句话就告诉 AI</b>：未来所有输入和结果输出都放这个路径——免得最后找不到文件手忙脚乱</li>
+      <li><b>让 AI 告诉你时间怎么分配</b>：第 1 步干嘛、第 2 步干嘛，各几分钟（它会给你一张表，你再按实际调整）</li>
+    </ul>
+  </div>
+  <p class="role" style="margin-top:8px;">
+  ▶ 本轮完整结构化指令见 <b>《答题执行手册》P1</b>（带复制按钮）：拆交付要求 → 排时间表 → 让它校验你的理解，三件事一次说清。Prompt 全集以《手册》为唯一正本，避免两份文件口径漂移。
+  </p>
+</div>
+
+<!-- ================= ⑥ 框架 ================= -->
+<h2 class="phase" id="p2">⑥ 框架先行 · 28–43 min</h2>
+<p class="phase-note">先要框架、后填肉。直接让它出方案，结构错了要整页重写，反而更慢。</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag t2">角色</span><span class="m-title">给 AI 定角色（看题再定，不预设）</span></div>
+  <p class="role">
+  角色定义属于打分第 1 项（Prompt 能力）。<b>但具体是什么角色，取决于当天出什么题</b>——
+  题是供应链就定供应链专家，题是内容运营就定内容方向，<b>看题再定，考前不预设</b>。
+  要预设的是<b>结构</b>：角色 = 身份 + 年限/擅长 + 任务背景 + 现存问题 + 业务目标 + 步骤约束 + 限制规则 + 输出规范。
+  </p>
+  <p class="role" style="margin-top:8px;">
+  ▶ 角色定义的完整结构化指令见 <b>《答题执行手册》P0</b>（第 1 条，七段结构一次定死，看题再填）。
+  </p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t2">骨架</span><span class="m-title">先要框架，然后自己先有判断</span></div>
+  <div class="two">
+    <div class="box must"><b>该做的</b><ul>
+      <li>让 AI 先给框架（业界公认框架），<b>不要直接给方案</b></li>
+      <li>框架形式大差不差：定位 / 使用场景 / 痛点 / 可行性分析……但<b>先定框架后填肉</b>这件事本身很重要</li>
+      <li>和 AI 多轮交互把框架完善到你认可为止</li>
+      <li><b>把"最终交付要求"丢给 AI，让它拆出交付物该有哪些板块</b>——倒推框架</li>
+    </ul></div>
+    <div class="box miss"><b>别做的</b><ul>
+      <li>一上来就"请你分析一下并给我方案"（这是扣分重灾区原句）</li>
+      <li>AI 给什么框架就用什么（没自己的判断 = 内容为零）</li>
+      <li>框架还没定就开始填细节，改起来更慢</li>
+    </ul></div>
+  </div>
+  <p class="role" style="margin-top:8px;">
+  ▶ 本轮完整结构化指令见 <b>《答题执行手册》P2</b>（含复制按钮）。
+  </p>
+</div>
+
+<!-- ================= ⑦ 材料 ================= -->
+<h2 class="phase" id="p3">⑦ 材料交叉与填充 · 43–101 min</h2>
+<p class="phase-note">这一步的核心是"别让 AI 只复述"——要它做判断。也是你<b>发挥质疑</b>的主战场。</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">交叉</span><span class="m-title">让 AI 找出矛盾 / 干扰项 / 缺失</span></div>
+  <p class="role" style="margin-top:8px;">
+  ▶ 本轮完整结构化指令见 <b>《答题执行手册》P3</b>（含复制按钮）。
+  </p>
+  <p class="role" style="margin-top:4px;">
+  <b>追问的姿势</b>（这是"纠错迭代"拿分点）：在 AI 的答案上再追一层——
+  "你识别得对，但我要追问：方案 C 除了时间长、花钱多，<b>还有没有更深的问题</b>？我担心 XX 本身可能不适合我们。"
+  </p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">补盲</span><span class="m-title">让 AI 联网补外部基准，打破"信息孤岛"</span></div>
+  <p class="role">你给的背景和 AI 的知识存在孤岛效应。让它去搜行业最佳实践来做参照系——这一步同时体现"求极致"（敢和最佳实践比）。
+  ▶ 完整结构化指令见 <b>《答题执行手册》P4</b>（含复制按钮）。</p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t2">填充</span><span class="m-title">逐项填框架：省时间 vs 花时间</span></div>
+  <div class="two">
+    <div class="box must"><b>省时间（直接从题干提炼）</b><ul>
+      <li>产品定位</li><li>使用场景</li><li>痛点</li>
+    </ul></div>
+    <div class="box must"><b>花时间（这是你的发挥区 + 质疑区）</b><ul>
+      <li>解决方案</li><li>可行性分析</li>
+    </ul></div>
+  </div>
+  <p class="role" style="margin-top:10px;">
+  <b>可行性分析怎么质疑</b>（照你自己的专业背景来，别照抄）：单次投入成本 vs 持续投入成本占比？收益够不够？
+  技术上能不能复用现有链路（后续升级即可），还是要改版/硬件改动？性能上限能不能真正解决痛点？
+  <b>只要质疑得够实，"坠机风险"就大幅下降。</b>
+  </p>
+  <p class="role">
+  条件允许时<b>多开几个窗口并行</b>：一个跑数据、一个跑业务问题、一个跑方案、一个做最终整合——能显著提速。
+  （取决于云桌面是否支持，作为可选项，不是必做。）
+  </p>
+</div>
+
+<!-- ================= ⑧ 交互姿态 ================= -->
+<div class="card">
+  <div class="m-head"><span class="tag t2">覆盖面</span><span class="m-title">填充时检查方案有没有"缺面"</span></div>
+  <div class="box must"><b>至少过一遍这几个侧面</b><ul>
+    <li><b>竞品对标</b>／行业通行做法怎么做的</li>
+    <li><b>商业化</b>：钱从哪来、成本谁承担、值不值</li>
+    <li><b>设计</b>：落到界面/流程上具体长什么样</li>
+    <li><b>多版本迭代路径</b>：首版做什么、二期做什么，别一次性做满</li>
+    <li><b>质量保障</b>：异常、边界、怎么验收</li>
+  </ul></div>
+  <p class="role" style="margin-top:8px;">
+  不适用的就明确写一句"本题不适用"，<b>不要默认跳过</b>——写了"不适用"说明你想过，跳过则看不出来。<br>
+  同时<b>拆题要互斥</b>：各部分不重叠、合起来覆盖全题，动手前用 MECE 自查一遍，避免同一件事在两块里重复算收益。</p>
+</div>
+
+<h2 class="phase" id="p4">⑧ 全程 · 交互姿态</h2>
+<p class="phase-note">贯穿全程，但<b>不是每一步都要走一遍</b>——每条都有自己的触发时机，对上了才用。</p>
+
+<div class="card">
+  <div class="m-head"><span class="tag t3">姿态 1</span><span class="m-title">先给判断，再让 AI 验证（别当"点菜员"）</span></div>
+  <div class="two">
+    <div class="box miss"><b>❌ 把判断权交出去</b><ul><li>"AI，你觉得这个项目先做哪一步？"</li></ul></div>
+    <div class="box must"><b>✔️ 你是主角</b><ul><li>"我的判断是先做 A 再做 B，因为 A 卡着 B 的交付，B 做早了也白做。<b>你帮我验证这个顺序有没有漏洞。</b>"</li></ul></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t3">姿态 2</span><span class="m-title">什么时候该质疑（触发式，不是每轮）</span></div>
+  <p class="role">
+  <b>先说清楚不该怎么做：质疑不是每轮都要有。</b>
+  为了凑轮数去质疑，是纯浪费，评委看得出来，而且会把对话撑到 30 轮以上——云桌面卡、上下文变长、时间直接爆掉。
+  <b>轮数不是指标，发现问题才质疑。</b>
+  </p>
+  <div class="box must"><b>该质疑的 7 个触发条件（命中任意一条就质疑）</b><ul>
+    <li>AI 的结论<b>和材料里的事实对不上</b>（能指出是哪一条）</li>
+    <li>AI <b>编了数据或来源</b>，或者用了你没给过的信息</li>
+    <li>AI 给的是<b>放之四海皆准的常识套话</b>，没用到你的具体材料</li>
+    <li>AI <b>漏了你在材料里看到的关键约束</b>（时间/预算/合规/依赖）</li>
+    <li>AI <b>前后自相矛盾</b>（这一步说的和上一步冲突）</li>
+    <li>AI <b>把现象当原因</b>，或者直接跳到方案没走推导</li>
+    <li>你觉得"好像对但说不出为什么"——<b>这种时候更要追问</b>，让它把依据和口径亮出来</li>
+  </ul></div>
+  <div class="box miss"><b>❌ 空泛质疑（一眼看穿，反扣分）</b><ul>
+    <li>"你这样做不太对吧？" / "你有没有抓住关键？"</li>
+    <li>这种叫"姿态很足、内容为零"，比不质疑还糟</li>
+  </ul></div>
+  <div class="box must"><b>✔️ 值钱的质疑 = 三件套</b><ul>
+    <li><b>指出它哪个具体判断错了</b> + <b>用证据说为什么错</b> + <b>给出你认为对的</b></li>
+  </ul></div>
+  <p class="role" style="margin-top:8px;">
+  ▶ 质疑的完整结构化指令见 <b>《答题执行手册》P8</b>（含复制按钮）。
+  </p>
+  <p class="role" style="margin-top:10px;">
+  <b>修正时的纪律</b>：AI 出错时不要重发模糊指令、也不要让它整份重来——
+  <b>精准定位到哪一部分出错，只让它改那一部分。</b>
+  </p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t3">姿态 3</span><span class="m-title">专业词要"用"出来，不是"背"出来</span></div>
+  <div class="two">
+    <div class="box miss"><b>❌ 背术语（没信息量）</b><ul><li>"要控制项目风险、提升质量。"</li></ul></div>
+    <div class="box must"><b>✔️ 嵌进具体判断动作</b><ul><li>"这个节点我用 RACI 把谁负责、谁批准定清楚，再设一个可验收的里程碑；风险主要卡在供应商交期，我提前锁了备选。"</li></ul></div>
+  </div>
+  <p class="role" style="margin-top:10px;">会背和会用是 5 分和 10 分的差别。判断标准：<b>别人一听就知道这个词是怎么落地的</b>。</p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t3">姿态 4</span><span class="m-title">有自己的思考并让 AI 反驳</span></div>
+  <div class="two">
+    <div class="box miss"><b>❌ 假装有判断</b><ul><li>"请你说一下关键是什么，并给我建议"（然后全程跟着 AI 走）</li></ul></div>
+    <div class="box must"><b>✔️ 判断填实 + 主动求反驳</b><ul><li>"我认为关键是提前锁定资源——因为上个月项目就是卡在'人到位了但资源没批'。<b>你反驳我，或告诉我更该先解决什么。</b>"</li></ul></div>
+  </div>
+  <p class="role" style="margin-top:10px;">判断的价值全在<b>具体那一件事</b>：你认为的关键到底是哪个、为什么是它。填得越实，越证明你真想过。</p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t3">姿态 5</span><span class="m-title">拍板之后，主动补 Plan B</span></div>
+  <p class="role">敢拍板 + 留后路，同时体现担当和兜底。真实项目信息永远不全，这正是"求极致"和"共成长"的体现（不让团队为你的盲目买单）。</p>
+  <div class="say"><button class="copy-btn">复制</button><pre>【输入】我拍板的方案 A。
+【我的决定 + Plan B】方案 A 我拍板了。但如果 <b>［最坏情况：如 供应商第2周掉链子 / 数据质量不达标 / 关键依赖延期］</b>，我就启动 B 备选：<b>［具体动作］</b>，守住 <b>［不可失守的东西：如交付日期不延期］</b>。
+【任务】你评估这个 Plan B：触发条件和切换成本写得够不够明确，不够就补。
+【输出】Plan B 评估 + 缺口补齐建议。</pre></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t3">姿态 6</span><span class="m-title">最高段位：连自己都敢推翻</span></div>
+  <p class="role">多数人只会挑 AI 的错。回头看自己方案的软肋并主动推翻它，才证明你的"求极致"是针对自己、不是针对别人。</p>
+  <div class="say"><button class="copy-btn">复制</button><pre>【自我推翻——"求极致"是针对自己的】
+我前面写的"<b>［原来的虚表述，如：确保进度顺利］</b>"太虚了，验收不了。
+我改成"<b>［可量化可验收的改写，如：第3周完成80%的测试用例，通过率95%］</b>"——这才可量化、可验收。
+▶ 接着对我这份交付物做全量虚词清零，直接用 <b>《答题执行手册》P10-b</b>（同一个动作，不维护两版）。</pre></div>
+</div>
+
+<!-- ================= ⑨ 产出 ================= -->
+<h2 class="phase" id="p5">⑨ 产出与交付 · 101–165 min</h2>
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">纪律</span><span class="m-title">边做边输出，绝不最后统一生成</span></div>
+  <div class="box must"><b>为什么（这是真实翻车点）</b><ul>
+    <li>导出工程文件 / HTML / PPT 的<b>生成速度受复杂度和难易度影响，不可控</b>；
+      最后合并 + 电脑卡顿 + 打字手速 → 大概率时间不够、匆忙乱打包，交付质量崩掉</li>
+    <li><b>做一点，输出一点</b>：一来保证有过程文档和阶段性结论，避免交白卷；
+      二来避免最后一次输出信息量太大、太慢、你控制不了能否踩点完成</li>
+    <li>每输出一部分，<b>让 AI 记住这部分内容</b>，方便后续整合</li>
+  </ul></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">变现</span><span class="m-title">把工具优势变现的 5 个动作（评委在录屏里看得见）</span></div>
+  <div class="box must"><b>你该做的</b><ul>
+    <li><b>sub-agent / 多窗口并行</b>：一个把分析结论整理成 analysis.md、一个同时写 Demo 页面——命中"会带人"，录屏可见（体验时间先确认环境允许）</li>
+    <li><b>用文件路径引用，别整段粘贴</b>：让 AI 直接读 analysis.md，省上下文也避免记串</li>
+    <li><b>让 AI 跑脚本算数</b>：漏斗转化率、流失人数让它算，别手算——错一个数整页不可信</li>
+    <li><b>/export 导出对话</b>：把全过程导成 Markdown 随提交附上，证明思路链真实、不是一次性生成</li>
+    <li><b>版本留痕</b>：v1 先存盘再迭代，改崩了能回退（/rewind）</li>
+  </ul></div>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t1">校验</span><span class="m-title">最后一道校验：换角色视角</span></div>
+  <p class="role">方案出来前，用一个具体角色的视角重新审一遍——逼出"可量化、可验收、不留模糊"的标准。</p>
+  <p class="role" style="margin-top:8px;">
+  ▶ 换角色校验的完整结构化指令见 <b>《答题执行手册》P10-a</b>（含复制按钮）。<br>
+  ▶ 另外在整合时（手册 P11）让 AI 在交付物里附一小节<b>「人机分工」</b>：哪些判断是你下的、哪些执行交给 AI——直接回应"驾驭 AI 提升产出"这条考察点。
+  </p>
+</div>
+
+<div class="card">
+  <div class="m-head"><span class="tag t2">Demo</span><span class="m-title">要交网页 Demo 时的硬约束</span></div>
+  <div class="box miss"><b>致命项（云桌面可能没网）</b><ul>
+    <li>引 CDN / 在线字体 / JS 图表库 → <b>无网直接白屏，头号死法</b></li>
+    <li>生成 React / Vite 项目 → 要 npm install，无网又耗时，直接崩（<b>只要单文件 HTML</b>）</li>
+    <li>中文编码必须 utf-8，否则一片方块</li>
+    <li>让它自己编数据 → 和前面的分析对不上，评委一对照就穿帮</li>
+  </ul></div>
+  <p class="role" style="margin-top:8px;">
+  ▶ Demo 的完整结构化指令（约束 + 大纲 + 生成 + 自检）见 <b>《答题执行手册》P12</b>（含复制按钮）；时间只剩 10 分钟时用手册里的<b>极简版三块</b>。
+  </p>
+</div>
+
+<!-- ================= ⑩ 提交 ================= -->
+<h2 class="phase" id="p6">⑩ 提交 · 165–180 min（留够 15 分钟）</h2>
+<div class="card">
+  <div class="box must"><b>提交纪律</b><ul>
+    <li><b>留够 15 分钟</b>——有人是在最后一分钟提上去的，那是幸存者，别学</li>
+    <li>文件<b>按题目要求分类、命名</b>，打成压缩包；题目要求的分类不做对会掉分</li>
+    <li>自检：无外链 / 中文不乱码 / file:// 直接能打开 / 没有编造数据 / 格式符合要求</li>
+    <li><b>可以"先提交，后补"</b>：先交一版保底，剩下时间再继续优化（如果允许重复提交）</li>
+    <li>小心和 AI 聊嗨了忘记时间和交作业</li>
+  </ul></div>
+</div>
+
+<!-- ================= ⑪ 自检 ================= -->
+<h2 class="phase" id="check">⑪ 交卷前自检清单</h2>
+<div class="chk">
+  <label><input type="checkbox"> <b>Prompt 能力</b>：我给 AI 的指令有角色定义、有背景目标、有步骤约束、有限制规则（禁编造）吗？</label>
+  <label><input type="checkbox"> <b>任务拆解</b>：我把大需求拆成了子任务，并控制住了 AI 的边界（没让它一把梭）吗？</label>
+  <label><input type="checkbox"> <b>交付物质量</b>：输出文件规范、符合题目要求的格式与命名、可复用吗？</label>
+  <label><input type="checkbox"> <b>纠错迭代</b>：我至少发现并修正过 AI 的一次实质性错误吗？有据可查吗？</label>
+  <hr style="border:none;border-top:1px solid var(--line);margin:12px 0;">
+  <label><input type="checkbox"> <b>有自己的判断</b>：我给出的关键判断是具体的一件事 + 具体理由，不是"我觉得应该先分析"这种？</label>
+  <label><input type="checkbox"> <b>质疑是实的</b>：我的每次质疑都指到了具体结论 + 给了证据 + 给了替代方案？（<b>不是每轮都有，但对得上的都有</b>）</label>
+  <label><input type="checkbox"> <b>无模糊词</b>：交付物里"适当/优化/显著提升/确保顺利"这类词都改成了可量化或可验收的判据？</label>
+  <label><input type="checkbox"> <b>有 Plan B</b>：拍板的方案后面跟了"如果最坏情况发生，我怎么办"？</label>
+  <label><input type="checkbox"> <b>第一性</b>：根因扒开了一层吗？有没有直接套模板的痕迹？</label>
+  <label><input type="checkbox"> <b>共成长</b>：交付物里留了"这套方法下次怎么复用"的一节吗？</label>
+  <label><input type="checkbox"> <b>人机分工</b>：交付物里附了"哪些判断是我下的、哪些执行交给 AI"的一小节吗？</label>
+  <label><input type="checkbox"> <b>无编造</b>：所有数据/结论都标了来源，没有的一律标"数据不足"？</label>
+  <label><input type="checkbox"> <b>Demo 能开</b>：file:// 直接打开正常？无外链？无乱码？</label>
+  <label><input type="checkbox"> <b>打包正确</b>：文件按题目要求分类命名、打成压缩包、<b>留够了提交时间</b>？</label>
+</div>
+
+<!-- ================= 附 M1-M10 ================= -->
+<h2 class="phase" id="m">附 · 分析内容清单（M1–M10）</h2>
+<p class="phase-note">
+这是从已有素材里<b>保留下来最有用的部分</b>：当你在第 ⑦ 步"逐项填充框架"时，用它当<b>内容体检表</b>——
+不是每一步都要走满，而是检查"该有的有没有漏"。<b>诊断段（M1–M6）务必做透</b>，那是评委判断思考深度的地方。
+</p>
+
+<div class="card">
+  <table>
+    <tr><th style="width:42px">模块</th><th style="width:170px">要产出什么</th><th>最易漏</th></tr>
+    <tr><td><b>M1</b></td><td>收益与风险盘点：核心结果指标（看题定）、收益怎么算、风险红线</td><td>只盯单一环节，忽略关联指标反向恶化；不提前交代缺什么数据（后面被迫编数）</td></tr>
+    <tr><td><b>M2</b></td><td>漏斗拆解：环节口径、转化率/流失率/<b>绝对流失量</b>、维度下钻、时间对比</td><td>只看转化率不看绝对量（小环节改了白改）；只看总漏斗不下钻</td></tr>
+    <tr><td><b>M3</b></td><td>反馈分类：来源与样本量、按环节+属性两维分类、频次占比、情绪加权</td><td>不标频次（3 人还是 3000 人？）；反馈不挂环节 → 变成噪音</td></tr>
+    <tr><td><b>M4</b></td><td>用户分层 + 场景分层，并<b>回挂漏斗</b>（哪类人在哪一环掉得最狠）</td><td>分层完不回挂漏斗 = 自嗨；只分用户不分场景</td></tr>
+    <tr><td><b>M5</b></td><td>交叉定位：数据断点 ↔ 反馈热点，找<b>张力</b>，回头修正初判</td><td>不做"更新"这步 → 初判一路走到黑；只信数据或只信反馈</td></tr>
+    <tr><td><b>M6</b></td><td>根因链：现象 → <b>机制</b> → 原因 → 结果（四段），标证据来源</td><td>把现象当根因（"活跃度低"是现象）；跳过"机制"层直接到原因</td></tr>
+    <tr><td><b>M7</b></td><td>候选方案 ≥2 个 + ROI 量级 + <b>不采纳的方向及理由</b></td><td>方案不映射回根因；只给一个方案（没对比就没取舍）</td></tr>
+    <tr><td><b>M8</b></td><td>优先级（ICE/RICE）+ 可执行动作六要素 + "不做什么" + 代价取舍</td><td>空泛词"适当提醒"；只说好处不说代价；停在 PPT 层面</td></tr>
+    <tr><td><b>M9</b></td><td>灰度节奏 + 三类指标（核心/过程/<b>护栏</b>）+ 成功/失败/回滚三线 + 回滚预案</td><td><b>漏护栏指标（最多人漏）</b>；只有成功线没有失败线和回滚线</td></tr>
+    <tr><td><b>M10</b></td><td>全量复盘 + 长尾观察 + 风险收口 + 成体系的交付目录</td><td>只做到灰度没有全量与长尾；交付目录不成体系（评委倒查找不到）</td></tr>
+  </table>
+  <div class="tip" style="margin-top:14px;">
+  <b>用法的分寸：</b>这是<b>体检表不是填空表</b>。时间紧时 M7/M8 可以合并成一张表，M9 保留护栏指标和三线即可。
+  <b>具体指标、分层维度、环节数量一律按当题业务定，不要套固定模板。</b>
+  </div>
+</div>
+
+<div class="tip">
+<b>最后一句提醒：</b>上面所有东西（价值观、姿态、质疑、框架）都不是背下来照做的台词。
+材料里说得最对的一句是——<b>"AI 能帮你读材料、整理信息、算数据、生成方案，但最后真正决定这份东西能不能交的，还是你自己的判断"</b>：
+逻辑对不对？数据准不准？方案到底能不能落地？
+</div>
+
+</div>
+<script>
+document.querySelectorAll('.copy-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.parentElement.querySelector('pre');
+    var text = pre.innerText;
+    function done(){ btn.textContent='已复制'; setTimeout(function(){btn.textContent='复制';},1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      var ta=document.createElement('textarea'); ta.value=text;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); done();
+    }
+  });
+});
+</script>
+</body>
+</html>
